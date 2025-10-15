@@ -1,0 +1,280 @@
+import { useState, useEffect } from 'react'
+import { Save, RefreshCw } from 'lucide-react'
+import { GetConfig, SaveConfig, AppConfig } from '../types'
+
+const defaultConfig: AppConfig = {
+  theme: 'light',
+  autoSave: true,
+  notifications: true,
+  openAIAPIKey: '',
+  openAIBaseURL: 'https://api.moonshot.cn/v1',
+  defaultTodoCategory: 'General',
+  maxTodos: 100,
+  language: 'en'
+}
+
+function Settings() {
+  const [config, setConfig] = useState<AppConfig>(defaultConfig)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  useEffect(() => {
+    loadConfig()
+  }, [])
+
+  const loadConfig = async () => {
+    try {
+      setLoading(true)
+      const configData = await GetConfig()
+      setConfig({ ...defaultConfig, ...configData })
+    } catch (error) {
+      console.error('Failed to load config:', error)
+      setMessage({ type: 'error', text: 'Failed to load configuration' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSaveConfig = async () => {
+    try {
+      setSaving(true)
+      await SaveConfig(config)
+      setMessage({ type: 'success', text: 'Configuration saved successfully!' })
+      setTimeout(() => setMessage(null), 3000)
+    } catch (error) {
+      console.error('Failed to save config:', error)
+      setMessage({ type: 'error', text: 'Failed to save configuration' })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleConfigChange = (key: keyof AppConfig, value: any) => {
+    setConfig(prev => ({ ...prev, [key]: value }))
+  }
+
+  const resetToDefaults = () => {
+    setConfig(defaultConfig)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="px-4 py-6 sm:px-0">
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Settings</h2>
+          <p className="text-gray-600">Configure your Talus Helper preferences</p>
+        </div>
+
+        {message && (
+          <div className={`mb-6 p-4 rounded-lg ${
+            message.type === 'success' 
+              ? 'bg-green-50 border border-green-200 text-green-800' 
+              : 'bg-red-50 border border-red-200 text-red-800'
+          }`}>
+            {message.text}
+          </div>
+        )}
+
+        <div className="space-y-6">
+          {/* Theme Settings */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Appearance</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Theme
+                </label>
+                <select
+                  value={config.theme}
+                  onChange={(e) => handleConfigChange('theme', e.target.value)}
+                  className="input-field"
+                >
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                  <option value="auto">Auto (System)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* General Settings */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">General</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Auto-save changes
+                  </label>
+                  <p className="text-sm text-gray-500">
+                    Automatically save todos and settings changes
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.autoSave}
+                    onChange={(e) => handleConfigChange('autoSave', e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Notifications
+                  </label>
+                  <p className="text-sm text-gray-500">
+                    Show system notifications for completed tasks
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.notifications}
+                    onChange={(e) => handleConfigChange('notifications', e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Todo Settings */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Todo Settings</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Default Category
+                </label>
+                <input
+                  type="text"
+                  value={config.defaultTodoCategory}
+                  onChange={(e) => handleConfigChange('defaultTodoCategory', e.target.value)}
+                  className="input-field"
+                  placeholder="General"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Maximum Todos
+                </label>
+                <input
+                  type="number"
+                  value={config.maxTodos}
+                  onChange={(e) => handleConfigChange('maxTodos', parseInt(e.target.value) || 100)}
+                  className="input-field"
+                  min="1"
+                  max="1000"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Maximum number of todos to keep in the list
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* OpenAI Settings */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">OCR Settings</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  OpenAI API Key
+                </label>
+                <input
+                  type="password"
+                  value={config.openAIAPIKey}
+                  onChange={(e) => handleConfigChange('openAIAPIKey', e.target.value)}
+                  className="input-field"
+                  placeholder="sk-..."
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Your OpenAI API key for OCR functionality. Get one from{' '}
+                  <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 underline">
+                    OpenAI Platform
+                  </a>
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  OpenAI Base URL
+                </label>
+                <input
+                  type="url"
+                  value={config.openAIBaseURL}
+                  onChange={(e) => handleConfigChange('openAIBaseURL', e.target.value)}
+                  className="input-field"
+                  placeholder="https://api.moonshot.cn/v1"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Base URL for the OpenAI-compatible API (e.g., Moonshot, OpenAI, etc.)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Language Settings */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Language</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Interface Language
+              </label>
+              <select
+                value={config.language}
+                onChange={(e) => handleConfigChange('language', e.target.value)}
+                className="input-field"
+              >
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4">
+            <button
+              onClick={handleSaveConfig}
+              disabled={saving}
+              className="btn-primary flex items-center gap-2"
+            >
+              {saving ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              {saving ? 'Saving...' : 'Save Settings'}
+            </button>
+            <button
+              onClick={resetToDefaults}
+              className="btn-secondary"
+            >
+              Reset to Defaults
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Settings
