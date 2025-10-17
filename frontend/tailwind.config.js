@@ -23,7 +23,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require('@iconify/tailwind').addDynamicIconSelectors(),
-  ],
+  plugins: [],
 }

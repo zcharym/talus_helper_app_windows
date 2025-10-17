@@ -1,19 +1,19 @@
 import { ReactNode, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-
+import { CheckSquare, Settings, Menu } from 'lucide-react'
 
 export const navigationTabs: TabItem[] = [
   {
     id: 'todos',
     label: 'Todo List',
     path: '/',
-    icon: <span className="icon-[tabler--check] w-4 h-4" />
+    icon: <CheckSquare className="w-4 h-4" />
   },
   {
     id: 'settings',
     label: 'Settings',
     path: '/settings',
-    icon: <span className="icon-[tabler--settings] w-4 h-4" />
+    icon: <Settings className="w-4 h-4" />
   }
 ]
 
@@ -80,7 +80,7 @@ function Tabs({ tabs, className = '', showMobileMenu = true }: TabsProps) {
                 aria-expanded="false"
               >
                 <span className="sr-only">Open main menu</span>
-                <span className="icon-[tabler--menu-2] w-6 h-6" />
+                <Menu className="w-6 h-6" />
               </button>
             </div>
           )}

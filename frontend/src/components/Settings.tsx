@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { GetConfig, SaveConfig } from '@wailsjs/go/main/App'
 import { AppConfig } from '../types'
+import { Check, AlertCircle, Save, RotateCcw } from 'lucide-react'
 
 const defaultConfig: AppConfig = {
   Theme: 'light',
@@ -75,12 +76,16 @@ function Settings() {
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
+          <div className={`mb-6 p-4 rounded-lg flex items-center gap-2 ${
             message.type === 'success' 
               ? 'bg-green-50 border border-green-200 text-green-800' 
               : 'bg-red-50 border border-red-200 text-red-800'
           }`}>
-            <span className={`icon-[tabler--${message.type === 'success' ? 'check' : 'alert-circle'}] w-5 h-5`}></span>
+            {message.type === 'success' ? (
+              <Check className="w-5 h-5" />
+            ) : (
+              <AlertCircle className="w-5 h-5" />
+            )}
             {message.text}
           </div>
         )}
@@ -258,19 +263,19 @@ function Settings() {
               disabled={saving}
               className="btn-primary flex items-center gap-2"
             >
-              {saving ? (
-                <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-              ) : (
-                <span className="icon-[tabler--device-floppy] w-4 h-4"></span>
-              )}
-              {saving ? 'Saving...' : 'Save Settings'}
-            </button>
-            <button
-              onClick={resetToDefaults}
-              className="btn-secondary flex items-center gap-2"
-            >
-              <span className="icon-[tabler--refresh] w-4 h-4"></span>
-              Reset to Defaults
+                  {saving ? (
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  {saving ? 'Saving...' : 'Save Settings'}
+                </button>
+                <button
+                  onClick={resetToDefaults}
+                  className="btn-secondary flex items-center gap-2"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Reset to Defaults
             </button>
           </div>
         </div>

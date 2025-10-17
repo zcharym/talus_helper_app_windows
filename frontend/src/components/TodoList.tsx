@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { GetTodos, AddTodo, UpdateTodo, DeleteTodo, OCRFromClipboard } from '@wailsjs/go/main/App'
 import { Todo } from '../types'
+import { Check, Plus, Clipboard, Edit2, Trash2, X, AlertCircle } from 'lucide-react'
 
 function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([])
@@ -129,8 +130,8 @@ function TodoList() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
-            <span className="icon-[tabler--alert-circle] w-5 h-5"></span>
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg flex items-center gap-2">
+            <AlertCircle className="w-5 h-5" />
             {error}
           </div>
         )}
@@ -156,7 +157,7 @@ function TodoList() {
               {ocrLoading ? (
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
               ) : (
-                <span className="icon-[tabler--clipboard] w-4 h-4"></span>
+                <Clipboard className="w-4 h-4" />
               )}
               {ocrLoading ? 'Reading...' : 'OCR'}
             </button>
@@ -165,7 +166,7 @@ function TodoList() {
               className="btn-primary flex items-center gap-2"
               disabled={!newTodoText.trim()}
             >
-              <span className="icon-[tabler--plus] w-4 h-4"></span>
+              <Plus className="w-4 h-4" />
               Add
             </button>
           </div>
@@ -176,7 +177,7 @@ function TodoList() {
           {todos.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
-                <span className="icon-[tabler--check] w-16 h-16 mx-auto"></span>
+                <Check className="w-16 h-16 mx-auto" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">All done!</h3>
               <p className="text-gray-500">Add a task above to get started.</p>
@@ -197,7 +198,7 @@ function TodoList() {
                       : 'border-gray-300 hover:border-primary-500'
                   }`}
                 >
-                  {todo.completed && <span className="icon-[tabler--check] w-3 h-3"></span>}
+                  {todo.completed && <Check className="w-3 h-3" />}
                 </button>
 
                 {editingId === todo.id ? (
@@ -218,13 +219,13 @@ function TodoList() {
                       className="btn-primary"
                       disabled={!editingText.trim()}
                     >
-                      <span className="icon-[tabler--check] w-4 h-4"></span>
+                      <Check className="w-4 h-4" />
                     </button>
                     <button
                       onClick={handleCancelEdit}
                       className="btn-secondary"
                     >
-                      <span className="icon-[tabler--x] w-4 h-4"></span>
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
@@ -242,14 +243,14 @@ function TodoList() {
                         className="p-2 text-gray-400 hover:text-primary-600 transition-colors"
                         title="Edit"
                       >
-                        <span className="icon-[tabler--edit] w-4 h-4"></span>
+                        <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteTodo(todo.id)}
                         className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                         title="Delete"
                       >
-                        <span className="icon-[tabler--trash] w-4 h-4"></span>
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </>

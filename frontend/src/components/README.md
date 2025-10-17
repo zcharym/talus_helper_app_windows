@@ -5,7 +5,7 @@ A reusable navigation tabs component for the Talus Helper application.
 ## Features
 
 - ✅ **Responsive Design**: Desktop and mobile-friendly navigation
-- ✅ **Icon Support**: Tabler icons integration
+- ✅ **Icon Support**: Lucide icons integration
 - ✅ **Badge Support**: Optional badges for notifications or counts
 - ✅ **Active State**: Automatic active state based on current route
 - ✅ **Smooth Transitions**: CSS transitions for better UX
@@ -17,19 +17,20 @@ A reusable navigation tabs component for the Talus Helper application.
 
 ```tsx
 import Tabs, { TabItem } from './components/Tabs'
+import { CheckSquare, Settings } from 'lucide-react'
 
 const navigationTabs: TabItem[] = [
   {
     id: 'todos',
     label: 'Todo List',
     path: '/',
-    icon: <span className="icon-[tabler--check] w-4 h-4" />
+    icon: <CheckSquare className="w-4 h-4" />
   },
   {
     id: 'settings',
     label: 'Settings',
     path: '/settings',
-    icon: <span className="icon-[tabler--settings] w-4 h-4" />
+    icon: <Settings className="w-4 h-4" />
   }
 ]
 
@@ -46,19 +47,21 @@ function App() {
 ### With Badges
 
 ```tsx
+import { CheckSquare, Bell } from 'lucide-react'
+
 const tabsWithBadges: TabItem[] = [
   {
     id: 'todos',
     label: 'Todo List',
     path: '/',
-    icon: <span className="icon-[tabler--check] w-4 h-4" />,
+    icon: <CheckSquare className="w-4 h-4" />,
     badge: '5' // Shows number of pending todos
   },
   {
     id: 'notifications',
     label: 'Notifications',
     path: '/notifications',
-    icon: <span className="icon-[tabler--bell] w-4 h-4" />,
+    icon: <Bell className="w-4 h-4" />,
     badge: '3' // Shows number of unread notifications
   }
 ]
@@ -69,30 +72,32 @@ const tabsWithBadges: TabItem[] = [
 To add new tabs, simply add them to the `navigationTabs` array:
 
 ```tsx
+import { CheckSquare, Folder, BarChart3, Settings } from 'lucide-react'
+
 const navigationTabs: TabItem[] = [
   {
     id: 'todos',
     label: 'Todo List',
     path: '/',
-    icon: <span className="icon-[tabler--check] w-4 h-4" />
+    icon: <CheckSquare className="w-4 h-4" />
   },
   {
     id: 'projects', // New tab
     label: 'Projects',
     path: '/projects',
-    icon: <span className="icon-[tabler--folder] w-4 h-4" />
+    icon: <Folder className="w-4 h-4" />
   },
   {
     id: 'analytics', // New tab
     label: 'Analytics',
     path: '/analytics',
-    icon: <span className="icon-[tabler--chart-bar] w-4 h-4" />
+    icon: <BarChart3 className="w-4 h-4" />
   },
   {
     id: 'settings',
     label: 'Settings',
     path: '/settings',
-    icon: <span className="icon-[tabler--settings] w-4 h-4" />
+    icon: <Settings className="w-4 h-4" />
   }
 ]
 ```
