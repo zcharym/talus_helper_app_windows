@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Plus, Edit2, Trash2, Check, X, Clipboard } from 'lucide-react'
-import { GetTodos, AddTodo, UpdateTodo, DeleteTodo, Todo, OCRFromClipboard } from '../types'
+import { GetTodos, AddTodo, UpdateTodo, DeleteTodo, OCRFromClipboard } from '@wailsjs/go/main/App'
+import { Todo } from '../types'
 
 function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([])

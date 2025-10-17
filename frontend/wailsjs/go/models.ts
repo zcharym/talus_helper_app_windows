@@ -1,14 +1,14 @@
 export namespace config {
 	
 	export class Config {
-	    theme: string;
-	    autoSave: boolean;
-	    notifications: boolean;
-	    openAIAPIKey: string;
-	    openAIBaseURL: string;
-	    defaultTodoCategory: string;
-	    maxTodos: number;
-	    language: string;
+	    Theme: string;
+	    AutoSave: boolean;
+	    Notifications: boolean;
+	    OpenAIAPIKey: string;
+	    OpenAIBaseURL: string;
+	    DefaultTodoCategory: string;
+	    MaxTodos: number;
+	    Language: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Config(source);
@@ -16,14 +16,14 @@ export namespace config {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.theme = source["theme"];
-	        this.autoSave = source["autoSave"];
-	        this.notifications = source["notifications"];
-	        this.openAIAPIKey = source["openAIAPIKey"];
-	        this.openAIBaseURL = source["openAIBaseURL"];
-	        this.defaultTodoCategory = source["defaultTodoCategory"];
-	        this.maxTodos = source["maxTodos"];
-	        this.language = source["language"];
+	        this.Theme = source["Theme"];
+	        this.AutoSave = source["AutoSave"];
+	        this.Notifications = source["Notifications"];
+	        this.OpenAIAPIKey = source["OpenAIAPIKey"];
+	        this.OpenAIBaseURL = source["OpenAIBaseURL"];
+	        this.DefaultTodoCategory = source["DefaultTodoCategory"];
+	        this.MaxTodos = source["MaxTodos"];
+	        this.Language = source["Language"];
 	    }
 	}
 

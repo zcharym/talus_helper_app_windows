@@ -13,6 +13,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@wailsjs/*": ["wailsjs/*"]
+    },
 
     /* Linting */
     "strict": true,
@@ -20,6 +25,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "wailsjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

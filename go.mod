@@ -3,6 +3,7 @@ module talus_helper_windows
 go 1.23
 
 require (
+	github.com/BurntSushi/toml v1.3.2
 	github.com/google/uuid v1.6.0
 	github.com/wailsapp/wails/v2 v2.10.2
 	golang.design/x/clipboard v0.7.0

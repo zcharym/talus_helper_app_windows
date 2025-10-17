@@ -1,21 +1,22 @@
 package config
 
 import (
-	"encoding/json"
 	"os"
 	"path/filepath"
+
+	"github.com/BurntSushi/toml"
 )
 
 // Config represents application configuration
 type Config struct {
-	Theme               string `json:"theme"`
-	AutoSave            bool   `json:"autoSave"`
-	Notifications       bool   `json:"notifications"`
-	OpenAIAPIKey        string `json:"openAIAPIKey"`
-	OpenAIBaseURL       string `json:"openAIBaseURL"`
-	DefaultTodoCategory string `json:"defaultTodoCategory"`
-	MaxTodos            int    `json:"maxTodos"`
-	Language            string `json:"language"`
+	Theme               string `toml:"theme"`
+	AutoSave            bool   `toml:"autoSave"`
+	Notifications       bool   `toml:"notifications"`
+	OpenAIAPIKey        string `toml:"openAIAPIKey"`
+	OpenAIBaseURL       string `toml:"openAIBaseURL"`
+	DefaultTodoCategory string `toml:"defaultTodoCategory"`
+	MaxTodos            int    `toml:"maxTodos"`
+	Language            string `toml:"language"`
 }
 
 // GetDataDir returns the application data directory
@@ -52,7 +53,7 @@ func Load() (*Config, error) {
 		return nil, err
 	}
 
-	configFile := filepath.Join(dataDir, "config.json")
+	configFile := filepath.Join(dataDir, "config.toml")
 	data, err := os.ReadFile(configFile)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -64,7 +65,7 @@ func Load() (*Config, error) {
 	}
 
 	var config Config
-	if err := json.Unmarshal(data, &config); err != nil {
+	if err := toml.Unmarshal(data, &config); err != nil {
 		return nil, err
 	}
 
@@ -78,11 +79,13 @@ func Save(config Config) error {
 		return err
 	}
 
-	configFile := filepath.Join(dataDir, "config.json")
-	data, err := json.MarshalIndent(config, "", "  ")
+	configFile := filepath.Join(dataDir, "config.toml")
+	file, err := os.Create(configFile)
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 
-	return os.WriteFile(configFile, data, 0644)
+	encoder := toml.NewEncoder(file)
+	return encoder.Encode(config)
 }

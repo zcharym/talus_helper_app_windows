@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Save, RefreshCw } from 'lucide-react'
-import { GetConfig, SaveConfig, AppConfig } from '../types'
+import { GetConfig, SaveConfig } from '@wailsjs/go/main/App'
+import { AppConfig } from '../types'
 
 const defaultConfig: AppConfig = {
-  theme: 'light',
-  autoSave: true,
-  notifications: true,
-  openAIAPIKey: '',
-  openAIBaseURL: 'https://api.moonshot.cn/v1',
-  defaultTodoCategory: 'General',
-  maxTodos: 100,
-  language: 'en'
+  Theme: 'light',
+  AutoSave: true,
+  Notifications: true,
+  OpenAIAPIKey: '',
+  OpenAIBaseURL: 'https://api.moonshot.cn/v1',
+  DefaultTodoCategory: 'General',
+  MaxTodos: 100,
+  Language: 'en'
 }
 
 function Settings() {
@@ -27,7 +28,7 @@ function Settings() {
     try {
       setLoading(true)
       const configData = await GetConfig()
-      setConfig({ ...defaultConfig, ...configData })
+      setConfig(configData)
     } catch (error) {
       console.error('Failed to load config:', error)
       setMessage({ type: 'error', text: 'Failed to load configuration' })
@@ -51,7 +52,7 @@ function Settings() {
   }
 
   const handleConfigChange = (key: keyof AppConfig, value: any) => {
-    setConfig(prev => ({ ...prev, [key]: value }))
+    setConfig((prev: AppConfig) => ({ ...prev, [key]: value }))
   }
 
   const resetToDefaults = () => {
@@ -94,8 +95,8 @@ function Settings() {
                   Theme
                 </label>
                 <select
-                  value={config.theme}
-                  onChange={(e) => handleConfigChange('theme', e.target.value)}
+                  value={config.Theme}
+                  onChange={(e) => handleConfigChange('Theme', e.target.value)}
                   className="input-field"
                 >
                   <option value="light">Light</option>
@@ -122,8 +123,8 @@ function Settings() {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={config.autoSave}
-                    onChange={(e) => handleConfigChange('autoSave', e.target.checked)}
+                    checked={config.AutoSave}
+                    onChange={(e) => handleConfigChange('AutoSave', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
@@ -142,8 +143,8 @@ function Settings() {
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={config.notifications}
-                    onChange={(e) => handleConfigChange('notifications', e.target.checked)}
+                    checked={config.Notifications}
+                    onChange={(e) => handleConfigChange('Notifications', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
@@ -162,8 +163,8 @@ function Settings() {
                 </label>
                 <input
                   type="text"
-                  value={config.defaultTodoCategory}
-                  onChange={(e) => handleConfigChange('defaultTodoCategory', e.target.value)}
+                  value={config.DefaultTodoCategory}
+                  onChange={(e) => handleConfigChange('DefaultTodoCategory', e.target.value)}
                   className="input-field"
                   placeholder="General"
                 />
@@ -175,8 +176,8 @@ function Settings() {
                 </label>
                 <input
                   type="number"
-                  value={config.maxTodos}
-                  onChange={(e) => handleConfigChange('maxTodos', parseInt(e.target.value) || 100)}
+                  value={config.MaxTodos}
+                  onChange={(e) => handleConfigChange('MaxTodos', parseInt(e.target.value) || 100)}
                   className="input-field"
                   min="1"
                   max="1000"
@@ -198,8 +199,8 @@ function Settings() {
                 </label>
                 <input
                   type="password"
-                  value={config.openAIAPIKey}
-                  onChange={(e) => handleConfigChange('openAIAPIKey', e.target.value)}
+                  value={config.OpenAIAPIKey}
+                  onChange={(e) => handleConfigChange('OpenAIAPIKey', e.target.value)}
                   className="input-field"
                   placeholder="sk-..."
                 />
@@ -217,8 +218,8 @@ function Settings() {
                 </label>
                 <input
                   type="url"
-                  value={config.openAIBaseURL}
-                  onChange={(e) => handleConfigChange('openAIBaseURL', e.target.value)}
+                  value={config.OpenAIBaseURL}
+                  onChange={(e) => handleConfigChange('OpenAIBaseURL', e.target.value)}
                   className="input-field"
                   placeholder="https://api.moonshot.cn/v1"
                 />
@@ -237,8 +238,8 @@ function Settings() {
                 Interface Language
               </label>
               <select
-                value={config.language}
-                onChange={(e) => handleConfigChange('language', e.target.value)}
+                value={config.Language}
+                onChange={(e) => handleConfigChange('Language', e.target.value)}
                 className="input-field"
               >
                 <option value="en">English</option>
