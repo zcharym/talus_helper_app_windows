@@ -27,16 +27,11 @@ func NewTodoService(ctx context.Context, storage storage.Storage) *TodoService {
 
 // GetTodos returns all todos
 func (s *TodoService) GetTodos() ([]models.Todo, error) {
-	return s.storage.LoadTodos()
+	return s.storage.GetTodos(s.ctx)
 }
 
 // AddTodo adds a new todo
 func (s *TodoService) AddTodo(text string) (models.Todo, error) {
-	todos, err := s.storage.LoadTodos()
-	if err != nil {
-		return models.Todo{}, err
-	}
-
 	newTodo := models.Todo{
 		ID:        uuid.New().String(),
 		Text:      text,
@@ -44,10 +39,8 @@ func (s *TodoService) AddTodo(text string) (models.Todo, error) {
 		CreatedAt: time.Now(),
 	}
 
-	todos = append(todos, newTodo)
-
-	if err := s.storage.SaveTodos(todos); err != nil {
-		return models.Todo{}, err
+	if err := s.storage.CreateTodo(s.ctx, &newTodo); err != nil {
+		return models.Todo{}, fmt.Errorf("failed to create todo: %w", err)
 	}
 
 	return newTodo, nil
@@ -55,38 +48,27 @@ func (s *TodoService) AddTodo(text string) (models.Todo, error) {
 
 // UpdateTodo updates an existing todo
 func (s *TodoService) UpdateTodo(id, text string, completed bool) (models.Todo, error) {
-	todos, err := s.storage.LoadTodos()
+	// First, get the existing todo to preserve the created_at timestamp
+	existingTodo, err := s.storage.GetTodoByID(s.ctx, id)
 	if err != nil {
-		return models.Todo{}, err
+		return models.Todo{}, fmt.Errorf("failed to get todo: %w", err)
 	}
 
-	for i, todo := range todos {
-		if todo.ID == id {
-			todos[i].Text = text
-			todos[i].Completed = completed
-			if err := s.storage.SaveTodos(todos); err != nil {
-				return models.Todo{}, err
-			}
-			return todos[i], nil
-		}
+	// Update the todo with new values
+	existingTodo.Text = text
+	existingTodo.Completed = completed
+
+	if err := s.storage.UpdateTodo(s.ctx, existingTodo); err != nil {
+		return models.Todo{}, fmt.Errorf("failed to update todo: %w", err)
 	}
 
-	return models.Todo{}, fmt.Errorf("todo with id %s not found", id)
+	return *existingTodo, nil
 }
 
 // DeleteTodo deletes a todo
 func (s *TodoService) DeleteTodo(id string) error {
-	todos, err := s.storage.LoadTodos()
-	if err != nil {
-		return err
+	if err := s.storage.DeleteTodo(s.ctx, id); err != nil {
+		return fmt.Errorf("failed to delete todo: %w", err)
 	}
-
-	for i, todo := range todos {
-		if todo.ID == id {
-			todos = append(todos[:i], todos[i+1:]...)
-			return s.storage.SaveTodos(todos)
-		}
-	}
-
-	return fmt.Errorf("todo with id %s not found", id)
+	return nil
 }

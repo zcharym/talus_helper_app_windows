@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"talus_helper_windows/internal/clipboard"
 	"talus_helper_windows/internal/config"
@@ -40,7 +41,19 @@ func (a *App) startup(ctx context.Context) {
 		a.config = &defaultConfig
 	}
 
-	a.storage = storage.NewJSONStorage()
+	// Initialize SQLite storage
+	a.storage = storage.NewSQLiteStorage()
+	if err := a.storage.Connect(ctx); err != nil {
+		// Log error but continue with default config
+		// In production, you might want to handle this more gracefully
+		fmt.Printf("Failed to connect to database: %v\n", err)
+	}
+
+	// Run database migrations
+	if err := a.storage.Migrate(ctx); err != nil {
+		fmt.Printf("Failed to migrate database: %v\n", err)
+	}
+
 	a.clipboard = clipboard.NewWindowsClipboard()
 
 	// Initialize services
@@ -88,4 +101,13 @@ func (a *App) SaveConfig(cfg config.Config) error {
 // OCRFromClipboard extracts text from clipboard image using OpenAI Vision API
 func (a *App) OCRFromClipboard() (string, error) {
 	return a.clipboardService.OCRFromClipboard()
+}
+
+// shutdown is called when the app shuts down
+func (a *App) shutdown(ctx context.Context) {
+	if a.storage != nil {
+		if err := a.storage.Close(); err != nil {
+			fmt.Printf("Failed to close database connection: %v\n", err)
+		}
+	}
 }
