@@ -119,8 +119,8 @@ function TodoList() {
     <div className="px-4 py-6 sm:px-0">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Todo List</h2>
-          <p className="text-gray-600">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Todo List</h2>
+          <p className="text-gray-600 dark:text-gray-400">
             {totalCount === 0 
               ? "No tasks yet. Add one below to get started!" 
               : `${completedCount} of ${totalCount} tasks completed`
@@ -130,7 +130,7 @@ function TodoList() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg flex items-center gap-2">
+          <div className="mb-4 p-4 message-error rounded-lg flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
             {error}
           </div>
@@ -176,11 +176,11 @@ function TodoList() {
         <div className="space-y-2">
           {todos.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-gray-400 mb-4">
+              <div className="text-gray-400 dark:text-gray-600 mb-4">
                 <Check className="w-16 h-16 mx-auto" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">All done!</h3>
-              <p className="text-gray-500">Add a task above to get started.</p>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">All done!</h3>
+              <p className="text-gray-500 dark:text-gray-400">Add a task above to get started.</p>
             </div>
           ) : (
             todos.map((todo) => (
@@ -190,16 +190,16 @@ function TodoList() {
                   todo.completed ? 'opacity-75' : ''
                 }`}
               >
-                <button
-                  onClick={() => handleToggleTodo(todo.id)}
-                  className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                    todo.completed
-                      ? 'bg-primary-600 border-primary-600 text-white'
-                      : 'border-gray-300 hover:border-primary-500'
-                  }`}
-                >
-                  {todo.completed && <Check className="w-3 h-3" />}
-                </button>
+                    <button
+                      onClick={() => handleToggleTodo(todo.id)}
+                      className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                        todo.completed
+                          ? 'bg-primary-600 dark:bg-primary-500 border-primary-600 dark:border-primary-500 text-white'
+                          : 'border-gray-300 dark:border-gray-600 hover:border-primary-500 dark:hover:border-primary-400'
+                      }`}
+                    >
+                      {todo.completed && <Check className="w-3 h-3" />}
+                    </button>
 
                 {editingId === todo.id ? (
                   <div className="flex-1 flex gap-2">
@@ -232,7 +232,7 @@ function TodoList() {
                   <>
                     <span
                       className={`flex-1 ${
-                        todo.completed ? 'line-through text-gray-500' : 'text-gray-900'
+                        todo.completed ? 'line-through text-gray-500 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
                       }`}
                     >
                       {todo.text}
@@ -240,14 +240,14 @@ function TodoList() {
                     <div className="flex gap-1">
                       <button
                         onClick={() => handleEditTodo(todo.id, todo.text)}
-                        className="p-2 text-gray-400 hover:text-primary-600 transition-colors"
+                        className="p-2 text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                         title="Edit"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteTodo(todo.id)}
-                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
