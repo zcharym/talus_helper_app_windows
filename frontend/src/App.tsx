@@ -13,7 +13,7 @@ function App() {
           <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <Routes>
               <Route path="/" element={<TodoList />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/settings/*" element={<Settings />} />
             </Routes>
           </main>
         </div>
