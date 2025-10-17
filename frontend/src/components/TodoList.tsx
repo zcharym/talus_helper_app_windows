@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, Check, X, Clipboard } from 'lucide-react'
 import { GetTodos, AddTodo, UpdateTodo, DeleteTodo, OCRFromClipboard } from '@wailsjs/go/main/App'
 import { Todo } from '../types'
 
@@ -131,6 +130,7 @@ function TodoList() {
         {/* Error Message */}
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+            <span className="icon-[tabler--alert-circle] w-5 h-5"></span>
             {error}
           </div>
         )}
@@ -156,16 +156,16 @@ function TodoList() {
               {ocrLoading ? (
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
               ) : (
-                <Clipboard className="w-4 h-4" />
+                <span className="icon-[tabler--clipboard] w-4 h-4"></span>
               )}
-              {ocrLoading ? 'Reading...' : 'Read from Clipboard'}
+              {ocrLoading ? 'Reading...' : 'OCR'}
             </button>
             <button
               type="submit"
               className="btn-primary flex items-center gap-2"
               disabled={!newTodoText.trim()}
             >
-              <Plus className="w-4 h-4" />
+              <span className="icon-[tabler--plus] w-4 h-4"></span>
               Add
             </button>
           </div>
@@ -176,7 +176,7 @@ function TodoList() {
           {todos.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">
-                <Check className="w-16 h-16 mx-auto" />
+                <span className="icon-[tabler--check] w-16 h-16 mx-auto"></span>
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">All done!</h3>
               <p className="text-gray-500">Add a task above to get started.</p>
@@ -197,7 +197,7 @@ function TodoList() {
                       : 'border-gray-300 hover:border-primary-500'
                   }`}
                 >
-                  {todo.completed && <Check className="w-3 h-3" />}
+                  {todo.completed && <span className="icon-[tabler--check] w-3 h-3"></span>}
                 </button>
 
                 {editingId === todo.id ? (
@@ -218,13 +218,13 @@ function TodoList() {
                       className="btn-primary"
                       disabled={!editingText.trim()}
                     >
-                      <Check className="w-4 h-4" />
+                      <span className="icon-[tabler--check] w-4 h-4"></span>
                     </button>
                     <button
                       onClick={handleCancelEdit}
                       className="btn-secondary"
                     >
-                      <X className="w-4 h-4" />
+                      <span className="icon-[tabler--x] w-4 h-4"></span>
                     </button>
                   </div>
                 ) : (
@@ -242,14 +242,14 @@ function TodoList() {
                         className="p-2 text-gray-400 hover:text-primary-600 transition-colors"
                         title="Edit"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <span className="icon-[tabler--edit] w-4 h-4"></span>
                       </button>
                       <button
                         onClick={() => handleDeleteTodo(todo.id)}
                         className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                         title="Delete"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <span className="icon-[tabler--trash] w-4 h-4"></span>
                       </button>
                     </div>
                   </>
