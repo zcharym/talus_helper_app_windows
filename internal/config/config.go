@@ -20,6 +20,7 @@ type Config struct {
 	Language            string `toml:"language"`
 	OpenAIAPIKey        string `toml:"openAIAPIKey"`
 	WorkflowyAPIKey     string `toml:"workflowyAPIKey"`
+	Debug               bool   `toml:"debug"`
 }
 
 // LoadEnvForDebug loads .env file if it exists (for debug mode)
@@ -58,6 +59,7 @@ func GetDefault() Config {
 		MaxTodos:            100,
 		Language:            "en",
 		WorkflowyAPIKey:     "",
+		Debug:               false,
 	}
 }
 

@@ -9,6 +9,8 @@ import (
 	"talus_helper_windows/internal/models"
 	"talus_helper_windows/internal/services"
 	"talus_helper_windows/internal/storage"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct - thin orchestration layer
@@ -57,12 +59,17 @@ func (a *App) startup(ctx context.Context) {
 		fmt.Printf("Failed to migrate database: %v\n", err)
 	}
 
-	a.clipboard = clipboard.NewWindowsClipboard()
+	a.clipboard = clipboard.NewClipboard()
 
 	// Initialize services
 	a.todoService = services.NewTodoService(ctx, a.storage)
 	a.configService = services.NewConfigService(ctx, a.config)
 	a.clipboardService = services.NewClipboardService(ctx, a.config, a.clipboard)
+
+	// Print system info in debug mode
+	if a.config.Debug {
+		a.printSystemInfo()
+	}
 }
 
 // Todo methods - delegated to TodoService
@@ -104,6 +111,17 @@ func (a *App) SaveConfig(cfg config.Config) error {
 // OCRFromClipboard extracts text from clipboard image using OpenAI Vision API
 func (a *App) OCRFromClipboard() (string, error) {
 	return a.clipboardService.OCRFromClipboard()
+}
+
+// printSystemInfo prints system information when in debug mode
+func (a *App) printSystemInfo() {
+	envInfo := runtime.Environment(a.ctx)
+
+	fmt.Println("=== System Information (Debug Mode) ===")
+	fmt.Printf("Build Type: %s\n", envInfo.BuildType)
+	fmt.Printf("Platform: %s\n", envInfo.Platform)
+	fmt.Printf("Architecture: %s\n", envInfo.Arch)
+	fmt.Println("=====================================")
 }
 
 // shutdown is called when the app shuts down
