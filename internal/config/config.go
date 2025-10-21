@@ -1,10 +1,12 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
+	"github.com/joho/godotenv"
 )
 
 // Config represents application configuration
@@ -12,11 +14,23 @@ type Config struct {
 	Theme               string `toml:"theme"`
 	AutoSave            bool   `toml:"autoSave"`
 	Notifications       bool   `toml:"notifications"`
-	OpenAIAPIKey        string `toml:"openAIAPIKey"`
 	OpenAIBaseURL       string `toml:"openAIBaseURL"`
 	DefaultTodoCategory string `toml:"defaultTodoCategory"`
 	MaxTodos            int    `toml:"maxTodos"`
 	Language            string `toml:"language"`
+	OpenAIAPIKey        string `toml:"openAIAPIKey"`
+	WorkflowyAPIKey     string `toml:"workflowyAPIKey"`
+}
+
+// LoadEnvForDebug loads .env file if it exists (for debug mode)
+func LoadEnvForDebug() {
+	// Try to load .env file from current directory
+	if err := godotenv.Load(); err != nil {
+		// .env file doesn't exist or can't be read, that's okay
+		fmt.Printf("Debug: No .env file found or error loading: %v\n", err)
+	} else {
+		fmt.Println("Debug: Loaded environment variables from .env file")
+	}
 }
 
 // GetDataDir returns the application data directory
@@ -43,10 +57,11 @@ func GetDefault() Config {
 		DefaultTodoCategory: "General",
 		MaxTodos:            100,
 		Language:            "en",
+		WorkflowyAPIKey:     "",
 	}
 }
 
-// Load reads the configuration from file
+// Load reads the configuration from file and environment variables
 func Load() (*Config, error) {
 	dataDir, err := GetDataDir()
 	if err != nil {
@@ -67,6 +82,23 @@ func Load() (*Config, error) {
 	var config Config
 	if err := toml.Unmarshal(data, &config); err != nil {
 		return nil, err
+	}
+
+	// Override with environment variables if they exist
+	if envAPIKey := os.Getenv("OPENAI_API_KEY"); envAPIKey != "" {
+		config.OpenAIAPIKey = envAPIKey
+	}
+	if envBaseURL := os.Getenv("OPENAI_BASE_URL"); envBaseURL != "" {
+		config.OpenAIBaseURL = envBaseURL
+	}
+	if envTheme := os.Getenv("THEME"); envTheme != "" {
+		config.Theme = envTheme
+	}
+	if envLanguage := os.Getenv("LANGUAGE"); envLanguage != "" {
+		config.Language = envLanguage
+	}
+	if envWorkflowyAPIKey := os.Getenv("WORKFLOWY_API_KEY"); envWorkflowyAPIKey != "" {
+		config.WorkflowyAPIKey = envWorkflowyAPIKey
 	}
 
 	return &config, nil

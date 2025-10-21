@@ -55,6 +55,12 @@ sketch
 # Built Visual Studio Code Extensions
 *.vsix
 
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history

@@ -32,6 +32,9 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
+	// Load environment variables for debug mode
+	config.LoadEnvForDebug()
+
 	// Initialize dependencies
 	var err error
 	a.config, err = config.Load()
