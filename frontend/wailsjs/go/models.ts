@@ -4,11 +4,12 @@ export namespace config {
 	    Theme: string;
 	    AutoSave: boolean;
 	    Notifications: boolean;
-	    OpenAIAPIKey: string;
 	    OpenAIBaseURL: string;
 	    DefaultTodoCategory: string;
 	    MaxTodos: number;
 	    Language: string;
+	    OpenAIAPIKey: string;
+	    WorkflowyAPIKey: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Config(source);
@@ -19,11 +20,12 @@ export namespace config {
 	        this.Theme = source["Theme"];
 	        this.AutoSave = source["AutoSave"];
 	        this.Notifications = source["Notifications"];
-	        this.OpenAIAPIKey = source["OpenAIAPIKey"];
 	        this.OpenAIBaseURL = source["OpenAIBaseURL"];
 	        this.DefaultTodoCategory = source["DefaultTodoCategory"];
 	        this.MaxTodos = source["MaxTodos"];
 	        this.Language = source["Language"];
+	        this.OpenAIAPIKey = source["OpenAIAPIKey"];
+	        this.WorkflowyAPIKey = source["WorkflowyAPIKey"];
 	    }
 	}
 

@@ -44,7 +44,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   // Apply theme changes
   useEffect(() => {
-    const applyTheme = async () => {
+    const applyTheme = () => {
       let shouldBeDark = false
 
       if (theme === 'dark') {
@@ -60,15 +60,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         document.documentElement.classList.add('dark')
       } else {
         document.documentElement.classList.remove('dark')
-      }
-
-      // Save to config
-      try {
-        const config = await GetConfig()
-        const updatedConfig = { ...config, Theme: theme }
-        await SaveConfig(updatedConfig)
-      } catch (error) {
-        console.error('Failed to save theme config:', error)
       }
     }
 
@@ -95,12 +86,31 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [theme])
 
-  const setTheme = (newTheme: Theme) => {
+  const setTheme = async (newTheme: Theme) => {
     setThemeState(newTheme)
+    
+    // Save to config when user explicitly changes theme
+    try {
+      const config = await GetConfig()
+      const updatedConfig = { ...config, Theme: newTheme }
+      await SaveConfig(updatedConfig)
+    } catch (error) {
+      console.error('Failed to save theme config:', error)
+    }
   }
 
-  const toggleTheme = () => {
-    setThemeState(prev => prev === 'light' ? 'dark' : 'light')
+  const toggleTheme = async () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setThemeState(newTheme)
+    
+    // Save to config when user toggles theme
+    try {
+      const config = await GetConfig()
+      const updatedConfig = { ...config, Theme: newTheme }
+      await SaveConfig(updatedConfig)
+    } catch (error) {
+      console.error('Failed to save theme config:', error)
+    }
   }
 
   const value: ThemeContextType = {

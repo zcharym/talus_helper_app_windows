@@ -85,19 +85,14 @@ func Load() (*Config, error) {
 	}
 
 	// Override with environment variables if they exist
-	if envAPIKey := os.Getenv("OPENAI_API_KEY"); envAPIKey != "" {
+	// Only override if the config value is empty/default to avoid overriding user settings
+	if envAPIKey := os.Getenv("OPENAI_API_KEY"); envAPIKey != "" && config.OpenAIAPIKey == "" {
 		config.OpenAIAPIKey = envAPIKey
 	}
-	if envBaseURL := os.Getenv("OPENAI_BASE_URL"); envBaseURL != "" {
+	if envBaseURL := os.Getenv("OPENAI_BASE_URL"); envBaseURL != "" && config.OpenAIBaseURL == "" {
 		config.OpenAIBaseURL = envBaseURL
 	}
-	if envTheme := os.Getenv("THEME"); envTheme != "" {
-		config.Theme = envTheme
-	}
-	if envLanguage := os.Getenv("LANGUAGE"); envLanguage != "" {
-		config.Language = envLanguage
-	}
-	if envWorkflowyAPIKey := os.Getenv("WORKFLOWY_API_KEY"); envWorkflowyAPIKey != "" {
+	if envWorkflowyAPIKey := os.Getenv("WORKFLOWY_API_KEY"); envWorkflowyAPIKey != "" && config.WorkflowyAPIKey == "" {
 		config.WorkflowyAPIKey = envWorkflowyAPIKey
 	}
 
