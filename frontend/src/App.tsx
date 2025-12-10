@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import TodoList from './components/TodoList'
 import Settings from './components/Settings'
+import Screenshots from './components/Screenshots'
+import PromptOptimizer from './components/PromptOptimizer'
 import Tabs, { navigationTabs } from './components/Tabs'
 import { ThemeProvider } from './contexts/ThemeContext'
 
@@ -13,6 +15,8 @@ function App() {
           <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <Routes>
               <Route path="/" element={<TodoList />} />
+              <Route path="/screenshots" element={<Screenshots />} />
+              <Route path="/prompt-optimizer" element={<PromptOptimizer />} />
               <Route path="/settings/*" element={<Settings />} />
             </Routes>
           </main>

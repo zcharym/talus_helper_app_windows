@@ -18,8 +18,20 @@ export function GetTodos() {
   return window['go']['main']['App']['GetTodos']();
 }
 
+export function ListScreenshots() {
+  return window['go']['main']['App']['ListScreenshots']();
+}
+
 export function OCRFromClipboard() {
   return window['go']['main']['App']['OCRFromClipboard']();
+}
+
+export function OpenScreenshot(arg1) {
+  return window['go']['main']['App']['OpenScreenshot'](arg1);
+}
+
+export function OptimizePrompt(arg1, arg2) {
+  return window['go']['main']['App']['OptimizePrompt'](arg1, arg2);
 }
 
 export function SaveConfig(arg1) {

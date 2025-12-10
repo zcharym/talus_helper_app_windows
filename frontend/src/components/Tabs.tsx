@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { CheckSquare, Settings, Menu } from 'lucide-react'
+import { CheckSquare, Settings, Menu, Image, Sparkles } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 
 export const navigationTabs: TabItem[] = [
@@ -9,6 +9,18 @@ export const navigationTabs: TabItem[] = [
     label: 'Todo List',
     path: '/',
     icon: <CheckSquare className="w-4 h-4" />
+  },
+  {
+    id: 'screenshots',
+    label: 'Screenshots',
+    path: '/screenshots',
+    icon: <Image className="w-4 h-4" />
+  },
+  {
+    id: 'prompt-optimizer',
+    label: 'Prompt Optimizer',
+    path: '/prompt-optimizer',
+    icon: <Sparkles className="w-4 h-4" />
   },
   {
     id: 'settings',

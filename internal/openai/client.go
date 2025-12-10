@@ -98,6 +98,77 @@ func (c *Client) ExtractTextFromImage(imageData []byte, imageFormat string) (str
 	return "", fmt.Errorf("unexpected response format")
 }
 
+// ChatCompletion performs a text-only chat completion request
+func (c *Client) ChatCompletion(messages []Message, temperature float64) (string, error) {
+	if c.APIKey == "" {
+		return "", fmt.Errorf("API key is required")
+	}
+
+	// Build the request
+	request := &VisionRequest{
+		Model:       "moonshot-v1-8k",
+		Messages:    messages,
+		Temperature: temperature,
+	}
+
+	// Marshal request to JSON
+	requestBody, err := json.Marshal(request)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal request: %w", err)
+	}
+
+	// Create HTTP request
+	req, err := http.NewRequest("POST", c.BaseURL+"/chat/completions", bytes.NewBuffer(requestBody))
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
+
+	// Set headers
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+c.APIKey)
+
+	// Send request
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to send request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// Read response body
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to read response: %w", err)
+	}
+
+	// Check for HTTP errors
+	if resp.StatusCode != http.StatusOK {
+		var errorResp ErrorResponse
+		if err := json.Unmarshal(responseBody, &errorResp); err != nil {
+			return "", fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(responseBody))
+		}
+		return "", fmt.Errorf("API error: %s", errorResp.Error.Message)
+	}
+
+	// Parse response
+	var chatResp VisionResponse
+	if err := json.Unmarshal(responseBody, &chatResp); err != nil {
+		return "", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	// Extract text from response
+	if len(chatResp.Choices) == 0 {
+		return "", fmt.Errorf("no choices in response")
+	}
+
+	// Get the text content from the first choice
+	choice := chatResp.Choices[0]
+	if textContent, ok := choice.Message.Content.(string); ok {
+		return textContent, nil
+	}
+
+	return "", fmt.Errorf("unexpected response format")
+}
+
 // encodeToBase64 encodes data to base64 string
 func encodeToBase64(data []byte) string {
 	return base64.StdEncoding.EncodeToString(data)

@@ -15,13 +15,15 @@ import (
 
 // App struct - thin orchestration layer
 type App struct {
-	ctx              context.Context
-	config           *config.Config
-	storage          storage.Storage
-	clipboard        clipboard.Clipboard
-	todoService      *services.TodoService
-	configService    *services.ConfigService
-	clipboardService *services.ClipboardService
+	ctx                   context.Context
+	config                *config.Config
+	storage               storage.Storage
+	clipboard             clipboard.Clipboard
+	todoService           *services.TodoService
+	configService         *services.ConfigService
+	clipboardService      *services.ClipboardService
+	screenshotListService *services.ScreenshotListService
+	promptOptimizerService *services.PromptOptimizerService
 }
 
 // NewApp creates a new App application struct
@@ -65,6 +67,8 @@ func (a *App) startup(ctx context.Context) {
 	a.todoService = services.NewTodoService(ctx, a.storage)
 	a.configService = services.NewConfigService(ctx, a.config)
 	a.clipboardService = services.NewClipboardService(ctx, a.config, a.clipboard)
+	a.screenshotListService = services.NewScreenshotListService()
+	a.promptOptimizerService = services.NewPromptOptimizerService(ctx, a.config)
 
 	// Print system info in debug mode
 	if a.config.Debug {
@@ -111,6 +115,25 @@ func (a *App) SaveConfig(cfg config.Config) error {
 // OCRFromClipboard extracts text from clipboard image using OpenAI Vision API
 func (a *App) OCRFromClipboard() (string, error) {
 	return a.clipboardService.OCRFromClipboard()
+}
+
+// Screenshots methods - delegated to ScreenshotListService
+
+// ListScreenshots returns basic metadata of screenshots in the default directory
+func (a *App) ListScreenshots() ([]services.ScreenshotFile, error) {
+    return a.screenshotListService.ListScreenshots()
+}
+
+// OpenScreenshot opens the given screenshot with the default OS viewer
+func (a *App) OpenScreenshot(path string) error {
+	return a.screenshotListService.OpenScreenshot(path)
+}
+
+// Prompt Optimizer methods - delegated to PromptOptimizerService
+
+// OptimizePrompt optimizes a user prompt using AI
+func (a *App) OptimizePrompt(prompt string, style string) (string, error) {
+	return a.promptOptimizerService.OptimizePrompt(prompt, style)
 }
 
 // printSystemInfo prints system information when in debug mode
